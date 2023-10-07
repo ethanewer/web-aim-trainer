@@ -2,7 +2,7 @@ body {
 	margin: 0;
 }
 
-.overlay {
+#overlay {
 	/* Center the overlay in the container */
 	position: absolute;
 	top: 50%;
@@ -10,4 +10,36 @@ body {
 	transform: translate(-50%, -50%);
 	z-index: 1; /* Place it on top of the canvas (you can adjust this) */
 	pointer-events: none;
+}
+
+#menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    display: flex;
+}
+
+#startButton {
+    padding: 10px 20px;
+    font-size: 1.5em;
+    background-color: #0088ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    outline: none;
+	margin-bottom: 20px;
+}
+
+#score {
+	padding: 10px 20px;
+    font-size: 2em;
+    color: white;
 }

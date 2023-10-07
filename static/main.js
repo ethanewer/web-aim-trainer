@@ -1,5 +1,36 @@
 import * as THREE from 'three';
 
+var inGame = false;
+
+let timeLeft = 10, score = 0;
+
+function updateTimer() {
+	if (timeLeft > 0) {
+		timeLeft--;
+		setTimeout(updateTimer, 1000);
+	} else {
+		console.log('timer done, score:', score);
+		endGame();
+	}
+}
+
+function startGame() {
+	inGame = true;
+	document.body.requestPointerLock();
+	menu.style.display = 'none';
+	timeLeft = 10;
+	score = 0;
+	updateTimer();
+	animate();
+}
+
+function endGame() {
+	inGame = false;
+	document.exitPointerLock();
+	document.getElementById('score').textContent = `Score: ${score}`;
+	menu.style.display = 'flex';
+}
+
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -44,7 +75,7 @@ window.addEventListener('resize', () => {
 });
 
 document.body.addEventListener('mousemove', (event) => {
-	if (document.pointerLockElement === document.body) {
+	if (inGame && document.pointerLockElement === document.body) {
 		camera.rotation.y -= event.movementX / 512;
 		camera.rotation.x -= event.movementY / 512;
 		camera.rotation.x = Math.min(Math.max(camera.rotation.x, -1.57), 1.57);
@@ -54,25 +85,20 @@ document.body.addEventListener('mousemove', (event) => {
 let mouseClicked = false;
 
 window.addEventListener('mousedown', () => {
-	document.body.requestPointerLock();
-	mouseClicked = true;
+	if (inGame) {
+
+		mouseClicked = true;
+	}
 });
 
-let timeLeft = 10, score = 0;
+document.addEventListener('keydown', (event) => {
+	if (event.key === 'Escape' || event.key === 'Esc') endGame();
+});
 
-function updateTimer() {
-	if (timeLeft > 0) {
-		timeLeft--;
-		setTimeout(updateTimer, 1000);
-	} else {
-		console.log('timer done, score:', score);
-	}
-}
-
-updateTimer();
+document.getElementById('startButton').addEventListener('click', startGame);
 
 function animate() {
-	requestAnimationFrame(animate);
+	if (inGame) requestAnimationFrame(animate);
 
 	if (mouseClicked) {
 		let theta = camera.rotation.y, phi = camera.rotation.x;
