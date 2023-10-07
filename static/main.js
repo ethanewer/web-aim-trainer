@@ -25,10 +25,35 @@ function startGame() {
 }
 
 function endGame() {
+	if (!inGame) return;
 	inGame = false;
 	document.exitPointerLock();
-	document.getElementById('score').textContent = `Score: ${score}`;
 	menu.style.display = 'flex';
+
+	let scoreData = { name: "PlayerFromJS", score: score };
+	let scoreJSON = JSON.stringify(scoreData);
+	fetch('/score', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: scoreJSON
+	}).then(response => response.json()).then(data => {
+		document.getElementById('score').textContent = `Score: ${score}, High Score: ${data['highScore']}`;
+		let leaderboard = data['leaderboard']
+		const leaderboardTable = document.getElementById('leaderboardTable');
+		const leaderboardBody = leaderboardTable.getElementsByTagName('tbody')[0];
+		leaderboardBody.innerHTML = '';
+		for (let i = 0; i < leaderboard.length; i++) {
+			const row = leaderboardBody.insertRow(i);
+			const rankCell = row.insertCell(0);
+			const nameCell = row.insertCell(1);
+			const scoreCell = row.insertCell(2);
+			rankCell.innerHTML = i + 1;
+			nameCell.innerHTML = leaderboard[i]['name'];
+			scoreCell.innerHTML = leaderboard[i]['score'];
+		}
+	}).catch(error => { console.error(error); });
 }
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });

@@ -43,3 +43,9 @@ body {
     font-size: 2em;
     color: white;
 }
+
+#leaderboardTable {
+	padding: 10px 20px;
+    font-size: 1em;
+    color: white;
+}
