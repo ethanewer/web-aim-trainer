@@ -1,0 +1,13 @@
+body {
+	margin: 0;
+}
+
+.overlay {
+	/* Center the overlay in the container */
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 1; /* Place it on top of the canvas (you can adjust this) */
+	pointer-events: none;
+}
